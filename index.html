@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ Feliz Cumpleaños ✨</title>
+  <!-- Google Fonts: Cinzel Decorative & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Colores principales */
+      --rosa-inicio: #fde8ef;
+      --negro-fuerza: #0f0f12;
+      --morado-profundo: #5b21b6;
+      --gris-sobrio: #374151;
+      --verde-esperanza: #15803d;
+
+      --texto-claro: #f3f4f6;
+      --texto-suave: #d1d5db;
+      --blanco-puro: #ffffff;
+      
+      --card-bg: rgba(23, 23, 28, 0.75);
+      --card-border: rgba(168, 85, 247, 0.3);
+      --shadow-soft: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      min-height: 100vh;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--texto-claro);
+      background: linear-gradient(
+        160deg, 
+        var(--rosa-inicio) 0%, 
+        var(--negro-fuerza) 15%, 
+        var(--morado-profundo) 45%, 
+        var(--gris-sobrio) 75%, 
+        var(--verde-esperanza) 100%
+      );
+      background-attachment: fixed;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating background items */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      user-select: none;
+      animation: floatSmooth linear infinite;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    @keyframes floatSmooth {
+      0% { transform: translateY(105vh) rotate(0deg) scale(0.8); opacity: 0; }
+      15% { opacity: 0.85; }
+      85% { opacity: 0.85; }
+      100% { transform: translateY(-10vh) rotate(360deg) scale(1.1); opacity: 0; }
+    }
+
+    /* ENVELOPE / OVERLAY (CARTA Y SOBRE BLANCO) */
+    #envelope-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+    }
+    #envelope-modal.opened {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.4s ease;
+    }
+    .envelope-wrapper:hover {
+      transform: scale(1.04) translateY(-5px);
+    }
+
+    .envelope {
+      position: relative;
+      width: clamp(290px, 80vw, 380px);
+      height: 250px;
+      background: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: calc(clamp(290px, 80vw, 380px) / 2) solid transparent;
+      border-right: calc(clamp(290px, 80vw, 380px) / 2) solid transparent;
+      border-top: 140px solid #f9fafb;
+      transform-origin: top;
+      transition: transform 0.8s ease;
+      z-index: 3;
+    }
+    .envelope-wrapper.open-anim .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .envelope-pocket {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, #f3f4f6, #ffffff 60%);
+      clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+      z-index: 2;
+    }
+
+    .seal-btn {
+      position: absolute;
+      z-index: 4;
+      background: #111827;
+      color: #ffffff;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      border: 3px solid #e5e7eb;
+      animation: pulseHeart 2s infinite ease-in-out;
+      transition: transform 0.3s ease;
+    }
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .envelope-instruction {
+      margin-top: 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2937;
+      text-align: center;
+      letter-spacing: 0.5px;
+      animation: bounceText 2s infinite;
+    }
+    @keyframes bounceText {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* MAIN CONTENT WRAPPER */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1000px, 92%);
+      margin: auto;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      color: #e9d5ff;
+      background: rgba(15, 15, 18, 0.6);
+      border: 1px solid var(--card-border);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-family: 'Cinzel Decorative', serif;
+      margin: 25px 0 15px;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      line-height: 1.15;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 2.8vw, 1.35rem);
+      color: var(--texto-suave);
+      max-width: 720px;
+      margin: 0 auto 35px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 36px;
+      border-radius: 999px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--card-border);
+      background: linear-gradient(135deg, #7e22ce, #3b82f6);
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 18px 40px rgba(168, 85, 247, 0.4);
+      background: linear-gradient(135deg, #9333ea, #2563eb);
+    }
+
+    /* SECTIONS */
+    section { padding: 90px 0; }
+    
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      text-align: center;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+    .section-title span { color: #c084fc; }
+    
+    .section-sub {
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 50px;
+    }
+
+    /* BLESSING CARDS GRID */
+    .blessing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 35px 28px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 22px 45px rgba(168, 85, 247, 0.25);
+      border-color: #c084fc;
+    }
+    .icon {
+      font-size: 3rem;
+      margin-bottom: 18px;
+      display: inline-block;
+      animation: bounceIcon 2.5s infinite ease-in-out;
+    }
+    @keyframes bounceIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .card h3 {
+      margin-bottom: 14px;
+      color: #e9d5ff;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .card p {
+      color: var(--texto-suave);
+      line-height: 1.8;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    /* INTERACTIVE LETTER WRAPPER (ANIMACIÓN DESPLEGABLE) */
+    .letter-container {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 20px;
+    }
+
+    .letter-container.open {
+      max-height: 2000px;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .letter {
+      position: relative;
+      max-width: 860px;
+      margin: auto;
+      padding: clamp(35px, 6vw, 65px);
+      background: rgba(15, 15, 20, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+    }
+    .letter:before {
+      content: "";
+      position: absolute;
+      inset: 15px;
+      border: 1px dashed rgba(192, 132, 252, 0.3);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+    .letter p {
+      position: relative;
+      color: #e5e7eb;
+      line-height: 2;
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+    .letter .saludo {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.8rem;
+      color: #c084fc;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+    .signature {
+      font-family: 'Cinzel Decorative', serif !important;
+      color: #e9d5ff !important;
+      font-size: 1.4rem !important;
+      margin-top: 35px !important;
+      line-height: 1.6 !important;
+    }
+
+    .close-btn-wrapper {
+      text-align: center;
+      margin-top: 35px;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 12px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .btn-secondary:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+
+    /* QUOTE SECTION */
+    .quote {
+      text-align: center;
+      padding: 60px 30px;
+      background: rgba(23, 23, 28, 0.7);
+      border-radius: 28px;
+      border: 1px solid var(--card-border);
+      margin: 40px 0;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
+    .quote p {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      line-height: 1.5;
+      color: #f3f4f6;
+      font-weight: 700;
+    }
+    .quote small {
+      display: block;
+      margin-top: 20px;
+      color: var(--texto-suave);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* FOOTER & BUTTONS */
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--texto-suave);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    footer strong { color: #c084fc; }
+
+    /* REVEAL ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+      transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* CONFETTI ANIMATION */
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 99;
+      pointer-events: none;
+      animation: fall 4s linear forwards;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* TOP BUTTON */
+    .top {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: #1f2937;
+      color: #ffffff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top:hover {
+      transform: scale(1.15);
+      background: #374151;
+    }
+
+    /* STICKERS DECORATION */
+    .sticker {
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      filter: drop-shadow(0 5px 12px rgba(0,0,0,0.4));
+      animation: floatSticker 4s ease-in-out infinite;
+    }
+    @keyframes floatSticker {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    @media(max-width: 768px) {
+      section { padding: 60px 0; }
+      .letter p { font-size: 1rem; line-height: 1.8; }
+      .btn { padding: 15px 28px; font-size: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ENVELOPE OPENING OVERLAY (CARTA Y SOBRE BLANCO) -->
+  <div id="envelope-modal">
+    <div class="envelope-wrapper" id="envelope-wrapper">
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="seal-btn">✉️</div>
+        <div class="envelope-pocket"></div>
+      </div>
+    </div>
+    <div class="envelope-instruction">✨ ¡Haz clic en la carta para descubrir tu sorpresa! ✨</div>
+  </div>
+
+  <!-- FLOATING PARTICLES BACKGROUND -->
+  <div id="particles"></div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="badge">✨ Un día muy especial para alguien muy especial ✨</div>
+        <h1>¡Feliz Cumpleaños! 🎉</h1>
+        <p class="subtitle">
+          Hoy no solo celebramos un año más de tu vida; celebramos la fortaleza, autenticidad y alegría de compartir el camino con un gran hombre como tú. 🛡️🔥
+        </p>
+        <button class="btn" id="openLetterBtn">✉️ Leer mi carta especial</button>
+      </div>
+    </section>
+
+    <!-- BLESSINGS / DESEOS SECTION -->
+    <section>
+      <div class="wrap">
+        <h2 class="section-title reveal">Mis deseos para <span>ti</span> 🌟</h2>
+        <p class="section-sub reveal">Que este nuevo capítulo llegue cargado de grandes logros, fuerza y momentos memorables.</p>
+
+        <div class="blessing-grid">
+          <article class="card reveal">
+            <div class="icon">🛡️</div>
+            <h3>Muchas Bendiciones</h3>
+            <p>
+              Que Dios bendiga cada paso que des, guíe y proteja siempre tu camino y llene tu vida de paz, sabiduría, salud y carácter para conquistar cada meta. 🙏⚡
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">🚀</div>
+            <h3>Nuevos Comienzos</h3>
+            <p>
+              Que nunca te falten grandes oportunidades para crecer, aprender, alcanzar tus metas y descubrir todo lo extraordinario que el futuro tiene reservado para ti. 🌲⚔️
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">👑</div>
+            <h3>Un Corazón Fuerte y Feliz</h3>
+            <p>
+              Deseo que encuentres siempre lealtad, momentos inolvidables y razones de sobra para sentirte superorgulloso del gran hombre que eres. 🏆🌟
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LETTER SECTION -->
+    <section id="carta">
+      <div class="wrap" style="position: relative;">
+        <!-- Elementos decorativos estilo masculino/fuerza -->
+        <span class="sticker" style="top: -20px; left: -20px;">🛡️</span>
+        <span class="sticker" style="bottom: -20px; right: -20px;">⚔️</span>
+
+        <h2 class="section-title reveal">Una Carta Especial para <span>Ti</span> ✉️</h2>
+        <p class="section-sub reveal">Porque los verdaderos amigos merecen ser reconocidos con palabras honestas y de corazón.</p>
+
+        <!-- CONTAINER DESPLEGABLE CON ANIMACIÓN -->
+        <div class="letter-container" id="letterContainer">
+          <article class="letter">
+            <p class="saludo">Querido amigo: ⚡🌟</p>
+
+            <p>
+              Hoy quiero aprovechar este día tan especial para recordarte lo mucho que valoro tu sincera amistad. A veces el tiempo pasa volando y no siempre nos detenemos a decirle a un gran compañero lo importante que es su presencia en nuestra vida; por eso hoy quiero hacerlo de todo corazón. 🛡️
+            </p>
+
+            <p>
+              Gracias por cada conversación, por cada risa compartida, por los momentos de autenticidad y también por esos gestos que demuestran la gran lealtad y calidad de persona que eres. Gracias por mantenerte firme, por tu determinación, tus metas y por la manera tan auténtica con la que dejas una huella positiva en quienes te rodeamos. 🌲
+            </p>
+
+            <p>
+              Quiero que sepas que te aprecio muchísimo y que me alegra de verdad haber coincidido contigo. Tu amistad es un valor que estimo y que deseo conservar siempre. Espero que, sin importar el paso de los años, siempre podamos mirar atrás y recordar con orgullo todo el camino recorrido. ⚔️⭐
+            </p>
+
+            <p>
+              En este nuevo año de vida, deseo sinceramente que Dios te bendiga abundantemente, te dé claridad en cada decisión, fuerza inquebrantable en las dificultades y mucha sabiduría en tu día a día. Que se abran grandes puertas para ti, alcances cada meta que te propongas y te rodees de personas firmes que sepan valorar la gran persona que eres. 🙏✨
+            </p>
+
+            <p>
+              Nunca olvides que mereces solo cosas buenas, triunfos merecidos y personas leales a tu lado. Sigue adelante con fuerza en tus proyectos, celebra cada victoria, aprende de cada reto y mantén siempre esa esencia noble y auténtica que te caracteriza. 👑🔥
+            </p>
+
+            <p>
+              Espero que este cumpleaños sea el inicio de un año extraordinario, lleno de nuevos éxitos, grandes vivencias, risas y muchísimas bendiciones. 🎈🎂
+            </p>
+
+            <p class="signature">
+              Con muchísimo respeto y gran aprecio,<br>
+              alguien que agradece sinceramente tu valiosa amistad. 🤝⚡✨
+            </p>
+
+            <div class="close-btn-wrapper">
+              <button class="btn-secondary" id="closeLetterBtn">✖️ Cerrar carta</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUOTE SECTION -->
+    <section class="wrap reveal">
+      <div class="quote">
+        <p>“Que tu camino esté guiado por la firmeza, la sabiduría y grandes victorias.” ✨🌲</p>
+        <small>Hoy celebramos tu vida. Mañana y siempre seguiremos celebrando todo lo grande que está por venir. 🛡️</small>
+      </div>
+    </section>
+
+    <!-- CELEBRATE SECTION -->
+    <section>
+      <div class="wrap" style="text-align:center">
+        <h2 class="section-title reveal">Y antes de continuar… 🎉🎈</h2>
+        <p class="section-sub reveal">
+          Tómate un momento, visualiza tus más grandes metas y recuerda que este nuevo año viene lleno de oportunidades para ti. ✨
+        </p>
+        <button class="btn reveal" id="celebrate">🎊 ¡Celebrar y Levantar una Copa! 🎂</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Hecho con 🤝 <strong>sincero aprecio</strong> e 🌟 <strong>infinitas bendiciones</strong>.
+  </footer>
+
+  <button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
+
+  <script>
+    // PARTICLES / FLOATING EMOJIS BACKGROUND
+    const particles = document.getElementById("particles");
+    const icons = ["✨", "🛡️", "⚡", "🌲", "⚔️", "⭐", "🌌", "👑", "🎈"];
+    
+    for(let i = 0; i < 35; i++) {
+      const p = document.createElement("span");
+      p.className = "particle";
+      p.textContent = icons[Math.floor(Math.random() * icons.length)];
+      p.style.left = Math.random() * 100 + "%";
+      p.style.fontSize = (14 + Math.random() * 20) + "px";
+      p.style.animationDuration = (8 + Math.random() * 10) + "s";
+      p.style.animationDelay = (-Math.random() * 12) + "s";
+      particles.appendChild(p);
+    }
+
+    // ENVELOPE INTERACTION
+    const envelopeWrapper = document.getElementById("envelope-wrapper");
+    const envelopeModal = document.getElementById("envelope-modal");
+
+    envelopeWrapper.addEventListener("click", () => {
+      envelopeWrapper.classList.add("open-anim");
+      setTimeout(createConfetti, 400);
+      setTimeout(() => {
+        envelopeModal.classList.add("opened");
+      }, 1000);
+    });
+
+    // OPEN / CLOSE LETTER ANIMATION LOGIC
+    const openLetterBtn = document.getElementById("openLetterBtn");
+    const closeLetterBtn = document.getElementById("closeLetterBtn");
+    const letterContainer = document.getElementById("letterContainer");
+    const cartaSection = document.getElementById("carta");
+
+    function toggleLetter(open) {
+      if (open) {
+        letterContainer.classList.add("open");
+        openLetterBtn.textContent = "✉️ Carta Abierta";
+        setTimeout(() => {
+          cartaSection.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      } else {
+        letterContainer.classList.remove("open");
+        openLetterBtn.textContent = "✉️ Leer mi carta especial";
+      }
+    }
+
+    openLetterBtn.addEventListener("click", () => {
+      const isOpen = letterContainer.classList.contains("open");
+      toggleLetter(!isOpen);
+    });
+
+    closeLetterBtn.addEventListener("click", () => {
+      toggleLetter(false);
+    });
+
+    // REVEAL ANIMATIONS ON SCROLL
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add("show");
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // CONFETTI GENERATOR
+    function createConfetti() {
+      const symbols = ["✨", "🛡️", "⚡", "🎉", "🎂", "⭐", "🎈", "👑", "🏆"];
+      for(let i = 0; i < 80; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.fontSize = (16 + Math.random() * 22) + "px";
+        c.style.animationDuration = (2.5 + Math.random() * 2.5) + "s";
+        c.style.animationDelay = (Math.random() * 0.6) + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }
+    }
+
+    document.getElementById("celebrate").addEventListener("click", () => {
+      createConfetti();
+      const btn = document.getElementById("celebrate");
+      btn.textContent = "⚡ ¡Que se alcancen todas tus metas! 🛡️✨";
+      btn.style.transform = "scale(1.1)";
+    });
+  </script>
+</body>
+</html>
