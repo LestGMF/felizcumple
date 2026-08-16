@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ Feliz Cumpleaños ✨</title>
+  <!-- Google Fonts: Dancing Script & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rosa-pastel: #fbcfe8;
+      --rosa-suave: #f472b6;
+      --morado-pastel: #e9d5ff;
+      --morado-suave: #c084fc;
+      --celeste-pastel: #bae6fd;
+      --amarillo-pastel: #fef08a;
+      --verde-pastel: #bbf7d0;
+      --texto-oscuro: #4a3e56;
+      --texto-suave: #6b5b7b;
+      --blanco-translucido: rgba(255, 255, 255, 0.82);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --shadow-soft: 0 15px 35px rgba(225, 175, 209, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      font-family: 'Quicksand', sans-serif;
+      color: var(--texto-oscuro);
+      background: linear-gradient(135deg, #fce7f3 0%, #f3e8ff 40%, #e0f2fe 100%);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating background items */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particle {
+      position: absolute;
+      user-select: none;
+      animation: floatSmooth linear infinite;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.05));
+    }
+    @keyframes floatSmooth {
+      0% { transform: translateY(105vh) rotate(0deg) scale(0.8); opacity: 0; }
+      15% { opacity: 0.85; }
+      85% { opacity: 0.85; }
+      100% { transform: translateY(-10vh) rotate(360deg) scale(1.1); opacity: 0; }
+    }
+
+    /* ENVELOPE / CARTA INICIAL OVERLAY */
+    #envelope-modal {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(253, 226, 243, 0.95), rgba(233, 213, 255, 0.95));
+      backdrop-filter: blur(10px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+    }
+    #envelope-modal.opened {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.4s ease;
+    }
+    .envelope-wrapper:hover {
+      transform: scale(1.04) translateY(-5px);
+    }
+
+    .envelope {
+      position: relative;
+      width: clamp(290px, 80vw, 380px);
+      height: 250px;
+      background: #f472b6;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(244, 114, 182, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Envelope Flap */
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: calc(clamp(290px, 80vw, 380px) / 2) solid transparent;
+      border-right: calc(clamp(290px, 80vw, 380px) / 2) solid transparent;
+      border-top: 140px solid #f06292;
+      transform-origin: top;
+      transition: transform 0.8s ease;
+      z-index: 3;
+    }
+    .envelope-wrapper.open-anim .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .envelope-pocket {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, #ec4899, #f472b6 60%);
+      clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+      z-index: 2;
+    }
+
+    .seal-btn {
+      position: absolute;
+      z-index: 4;
+      background: #ffffff;
+      color: #ec4899;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      border: 3px solid #fbcfe8;
+      animation: pulseHeart 2s infinite ease-in-out;
+      transition: transform 0.3s ease;
+    }
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    .envelope-instruction {
+      margin-top: 28px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #831843;
+      text-align: center;
+      letter-spacing: 0.5px;
+      animation: bounceText 2s infinite;
+    }
+    @keyframes bounceText {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* MAIN CONTENT WRAPPER */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1000px, 92%);
+      margin: auto;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      color: #86198f;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid var(--morado-pastel);
+      font-size: 1.05rem;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(192, 132, 252, 0.25);
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      margin: 20px 0 15px;
+      font-size: clamp(4rem, 12vw, 8rem);
+      line-height: 1.05;
+      color: #9d174d;
+      text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.9), 0 10px 25px rgba(236, 72, 153, 0.25);
+    }
+
+    .subtitle {
+      font-size: clamp(1.2rem, 3.2vw, 1.5rem);
+      color: var(--texto-suave);
+      max-width: 720px;
+      margin: 0 auto 35px;
+      line-height: 1.7;
+      font-weight: 600;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 36px;
+      border-radius: 999px;
+      color: #831843;
+      text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border: 2px solid #fbcfe8;
+      background: linear-gradient(135deg, #ffffff, #fce7f3);
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(244, 114, 182, 0.3);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 18px 40px rgba(244, 114, 182, 0.45);
+      background: linear-gradient(135deg, #fce7f3, #ffffff);
+    }
+
+    /* SECTIONS */
+    section { padding: 90px 0; }
+    
+    .section-title {
+      font-family: 'Dancing Script', cursive;
+      text-align: center;
+      font-size: clamp(3rem, 7vw, 4.5rem);
+      margin-bottom: 12px;
+      color: #831843;
+    }
+    .section-title span { color: #c084fc; }
+    
+    .section-sub {
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 50px;
+    }
+
+    /* BLESSING CARDS GRID */
+    .blessing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 2px solid #fbcfe8;
+      border-radius: 30px;
+      padding: 35px 28px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 22px 45px rgba(225, 175, 209, 0.5);
+      border-color: var(--morado-suave);
+    }
+    .icon {
+      font-size: 3.2rem;
+      margin-bottom: 18px;
+      display: inline-block;
+      animation: bounceIcon 2.5s infinite ease-in-out;
+    }
+    @keyframes bounceIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .card h3 {
+      margin-bottom: 14px;
+      color: #86198f;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .card p {
+      color: var(--texto-suave);
+      line-height: 1.8;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* LETTER SECTION */
+    .letter {
+      position: relative;
+      max-width: 860px;
+      margin: auto;
+      padding: clamp(35px, 6vw, 70px);
+      background: linear-gradient(145deg, #ffffff, #fff5f8);
+      border: 3px solid #fbcfe8;
+      border-radius: 36px;
+      box-shadow: 0 25px 60px rgba(236, 72, 153, 0.2);
+    }
+    .letter:before {
+      content: "";
+      position: absolute;
+      inset: 15px;
+      border: 2px dashed #f472b6;
+      border-radius: 26px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .letter p {
+      position: relative;
+      color: var(--texto-oscuro);
+      line-height: 2;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .letter .saludo {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #9d174d;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .signature {
+      font-family: 'Dancing Script', cursive !important;
+      color: #86198f !important;
+      font-size: 2.2rem !important;
+      margin-top: 35px !important;
+      line-height: 1.4 !important;
+    }
+
+    /* QUOTE SECTION */
+    .quote {
+      text-align: center;
+      padding: 70px 30px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 30px;
+      border: 2px solid var(--morado-pastel);
+      margin: 40px 0;
+      box-shadow: var(--shadow-soft);
+    }
+    .quote p {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      line-height: 1.4;
+      color: #831843;
+      font-weight: 700;
+    }
+    .quote small {
+      display: block;
+      margin-top: 20px;
+      color: var(--texto-suave);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* FOOTER & BUTTONS */
+    .photo-note {
+      margin-top: 25px;
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--texto-suave);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    footer strong { color: #9d174d; }
+
+    /* REVEAL ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+      transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* CONFETTI ANIMATION */
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 99;
+      pointer-events: none;
+      animation: fall 4s linear forwards;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* TOP BUTTON */
+    .top {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: 2px solid #fbcfe8;
+      background: #ffffff;
+      color: #ec4899;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 10px 25px rgba(244, 114, 182, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top:hover {
+      transform: scale(1.15);
+      background: #fce7f3;
+    }
+
+    /* STICKERS / ADORABLE FIGURES DECORATIONS */
+    .sticker {
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      filter: drop-shadow(0 5px 12px rgba(0,0,0,0.1));
+      animation: floatSticker 4s ease-in-out infinite;
+    }
+    @keyframes floatSticker {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    @media(max-width: 768px) {
+      section { padding: 60px 0; }
+      .letter p { font-size: 1.1rem; line-height: 1.8; }
+      .btn { padding: 15px 28px; font-size: 1.1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ENVELOPE OPENING OVERLAY -->
+  <div id="envelope-modal">
+    <div class="envelope-wrapper" id="envelope-wrapper">
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="seal-btn">💌</div>
+        <div class="envelope-pocket"></div>
+      </div>
+    </div>
+    <div class="envelope-instruction">✨ ¡Haz clic en el sobre para abrir tu sorpresa! ✨</div>
+  </div>
+
+  <!-- FLOATING PARTICLES BACKGROUND -->
+  <div id="particles"></div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="badge">✨ Un día muy especial para alguien muy especial ✨</div>
+        <h1>¡Feliz Cumpleaños! 🎉</h1>
+        <p class="subtitle">
+          Hoy no solo celebramos un año más de tu vida; celebramos también la inmensa alegría de poder compartir contigo una parte del camino. 💖🌸
+        </p>
+        <a class="btn" href="#carta">💌 Leer mi carta especial</a>
+      </div>
+    </section>
+
+    <!-- BLESSINGS / DESEOS SECTION -->
+    <section>
+      <div class="wrap">
+        <h2 class="section-title reveal">Mis deseos para <span>ti</span> 🌟</h2>
+        <p class="section-sub reveal">Que este nuevo capítulo llegue cargado de infinitas cosas bonitas y sonrisas.</p>
+
+        <div class="blessing-grid">
+          <article class="card reveal">
+            <div class="icon">✨</div>
+            <h3>Muchas Bendiciones</h3>
+            <p>
+              Que Dios bendiga cada paso que des, cuide siempre tu camino y llene tu vida de paz, sabiduría, salud y mil motivos para seguir sonriendo. 🙏💖
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">🌱</div>
+            <h3>Nuevos Comienzos</h3>
+            <p>
+              Que nunca te falten hermosas oportunidades para crecer, aprender, cumplir tus sueños y descubrir todo lo bonito que aún está por llegar. 🌸🚀
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">💖</div>
+            <h3>Un Corazón Feliz</h3>
+            <p>
+              Deseo que encuentres siempre personas sinceras, momentos inolvidables y razones de sobra para sentirte superorgullosa de todo lo que eres. 🎀👑
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LETTER SECTION -->
+    <section id="carta">
+      <div class="wrap" style="position: relative;">
+        <!-- Cute stickers on sides -->
+        <span class="sticker" style="top: -20px; left: -20px;">🧸</span>
+        <span class="sticker" style="bottom: -20px; right: -20px;">🌸</span>
+
+        <h2 class="section-title reveal">Una Carta Especial para <span>Ti</span> 💌</h2>
+        <p class="section-sub reveal">Porque algunas personas merecen ser celebradas con palabras del corazón.</p>
+
+        <article class="letter reveal">
+          <p class="saludo">Querida amiga: 🌸✨</p>
+
+          <p>
+            Hoy quiero aprovechar este día tan especial para recordarte lo mucho que valoro tu maravillosa amistad. A veces la vida va tan rápido que no siempre encontramos el momento para decirle a alguien lo importante que es, por eso hoy quiero hacerlo de todo corazón. 💖
+          </p>
+
+          <p>
+            Gracias por cada conversación, por cada risa compartida, por los momentos inolvidables y también por esos pequeños detalles que quizás parecen simples, pero que hacen que una amistad sea verdaderamente especial e inolvidable. Gracias por ser tú, con tu forma de ser única, tus ocurrencias, tus sueños y esa manera tan linda de dejar una huella bonita en las personas que te rodean. 🎀
+          </p>
+
+          <p>
+            Quiero que sepas que te quiero muchísimo y que me alegra de verdad haber coincidio contigo. Tu amistad es un regalo que aprecio y que deseo conservar siempre con muchísimo cariño. Espero que, sin importar cuánto cambien los años, siempre podamos mirar atrás y recordar con una enorme sonrisa todos esos momentos tan especiales. 🌷⭐
+          </p>
+
+          <p>
+            En este nuevo año de vida deseo de todo corazón que Dios te bendiga abundantemente, que te dé fuerzas cuando las necesites, tranquilidad en tus días y mucha luz para tomar cada decisión. Que abra hermosas puertas para ti, cumpla cada anhelo de tu corazón y te rodee de personas que realmente sepan valorar el ser humano tan increíble que eres. 🙏✨
+          </p>
+
+          <p>
+            Nunca olvides que mereces solo cosas buenas, instantes felices y personas que te quieran sinceramente. Sigue adelante con tus sueños, celebra cada logro, aprende de cada experiencia y nunca pierdas esa esencia tan bonita que te hace ser tú. 👑💫
+          </p>
+
+          <p>
+            Espero que este cumpleaños sea solamente el hermoso comienzo de un año maravilloso, repleto de nuevas historias, grandes oportunidades, risas contagiosas y muchísimas bendiciones. 🎈🎂
+          </p>
+
+          <p class="signature">
+            Con muchísimo cariño,<br>
+            alguien que agradece infinitamente tu amistad. 💖🌸✨
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- QUOTE SECTION -->
+    <section class="wrap reveal">
+      <div class="quote">
+        <p>“Que todos tus nuevos comienzos estén llenos de luz, esperanza y bendiciones infinitas.” ✨🌷</p>
+        <small>Hoy celebramos tu vida. Mañana y siempre seguiremos celebrando todo lo lindo que está por venir. 💖</small>
+      </div>
+    </section>
+
+    <!-- CELEBRATE SECTION -->
+    <section>
+      <div class="wrap" style="text-align:center">
+        <h2 class="section-title reveal">Y antes de irte… 🎉🎈</h2>
+        <p class="section-sub reveal">
+          Cierra los ojos un segundo, pide un deseo de corazón y recuerda que este nuevo año traerá historias increíbles para ti. ✨
+        </p>
+        <button class="btn reveal" id="celebrate">🎊 ¡Celebrar y Pedir Deseo! 🎂</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Hecho con 💖 <strong>muchísimo cariño</strong> y 🌟 <strong>infinitas bendiciones</strong>.
+  </footer>
+
+  <button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
+
+  <script>
+    // PARTICLES / FLOATING EMOJIS BACKGROUND
+    const particles = document.getElementById("particles");
+    const icons = ["🌸", "✨", "💖", "🌷", "🎀", "⭐", "🦄", "☁️", "🎈"];
+    
+    for(let i = 0; i < 35; i++) {
+      const p = document.createElement("span");
+      p.className = "particle";
+      p.textContent = icons[Math.floor(Math.random() * icons.length)];
+      p.style.left = Math.random() * 100 + "%";
+      p.style.fontSize = (14 + Math.random() * 20) + "px";
+      p.style.animationDuration = (8 + Math.random() * 10) + "s";
+      p.style.animationDelay = (-Math.random() * 12) + "s";
+      particles.appendChild(p);
+    }
+
+    // ENVELOPE INTERACTION
+    const envelopeWrapper = document.getElementById("envelope-wrapper");
+    const envelopeModal = document.getElementById("envelope-modal");
+
+    envelopeWrapper.addEventListener("click", () => {
+      envelopeWrapper.classList.add("open-anim");
+      // Trigger confetti upon envelope open
+      setTimeout(createConfetti, 400);
+      setTimeout(() => {
+        envelopeModal.classList.add("opened");
+      }, 1000);
+    });
+
+    // REVEAL ANIMATIONS ON SCROLL
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add("show");
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // CONFETTI GENERATOR
+    function createConfetti() {
+      const symbols = ["💖", "🌸", "✨", "🎉", "🎂", "⭐", "🎈", "🌷", "🎀"];
+      for(let i = 0; i < 80; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.fontSize = (16 + Math.random() * 22) + "px";
+        c.style.animationDuration = (2.5 + Math.random() * 2.5) + "s";
+        c.style.animationDelay = (Math.random() * 0.6) + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }
+    }
+
+    document.getElementById("celebrate").addEventListener("click", () => {
+      createConfetti();
+      const btn = document.getElementById("celebrate");
+      btn.textContent = "💖 ¡Que se cumplan todos tus deseos! 🌸✨";
+      btn.style.transform = "scale(1.1)";
+    });
+  </script>
+</body>
+</html>
